@@ -1,0 +1,9 @@
+INFO: 2024/02/20 19:30:11 main.go:58: Worker has started its work
+INFO: 2024/02/20 19:33:36 main.go:58: Worker has started its work
+INFO: 2024/02/20 19:35:31 main.go:58: Worker has started its work
+INFO: 2024/02/20 19:36:22 main.go:58: Worker has started its work
+INFO: 2024/02/20 19:40:56 main.go:62: Worker has started its work
+INFO: 2024/02/20 19:41:40 main.go:62: Worker has started its work
+INFO: 2024/02/20 20:00:02 worker.go:18: Worker finished its work
+INFO: 2024/02/20 20:37:37 main.go:70: Worker has started its work
+INFO: 2024/02/20 20:43:02 main.go:70: Worker has started its work

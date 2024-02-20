@@ -43,7 +43,7 @@ func main() {
 
 	r := repository.NewRepository(db)
 
-	serviceLogger, err := logger.NewLogger("service.log")
+	serviceLogger, err := logger.NewLogger("service")
 	if err != nil {
 		log.Print("app will be created without logging\"")
 		serviceLogger = logger.Logger{}
