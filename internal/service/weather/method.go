@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
@@ -25,13 +26,15 @@ func (w WeatherService) InsertData(cityName string) error {
 
 	resp, err := http.Get(parsedURL.String())
 	if err != nil {
+		if _, ok := err.(net.Error); ok {
+			return model.ErrNoInternetConnection
+		}
 		return err
 	}
 	defer resp.Body.Close()
 
-	// change error to another instance
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("bad status code")
+		return model.ErrNoCity
 	}
 
 	var result model.WeatherResponse
@@ -51,19 +54,23 @@ func (w WeatherService) InsertData(cityName string) error {
 
 	// send info to repo layer
 	_, err = w.repo.GetCityByName(city.CityName)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			if err = w.repo.CreateNewData(city); err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-	} else {
-		if err = w.repo.UpdateCityByModel(city); err != nil {
-			return err
-		}
+	if errors.Is(err, sql.ErrNoRows) {
+		return w.repo.CreateNewData(city)
+	} else if err != nil {
+		return err
 	}
 
-	return nil
+	return w.repo.UpdateCityByModel(city)
+}
+
+func (w WeatherService) GetCityData(cityName string) (model.City, error) {
+	result, err := w.repo.GetCityByName(cityName)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.City{}, model.ErrNoCity
+		}
+		return model.City{}, err
+	}
+
+	return result, nil
 }

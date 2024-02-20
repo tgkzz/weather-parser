@@ -7,6 +7,7 @@ func (err constError) Error() string {
 }
 
 const (
-	Err4xxStatusCode = constError("another service is receiving ...")
-	ErrEmptyParams   = constError("some of the parameters are missing")
+	ErrNoInternetConnection = constError("service dont have internet connection")
+	ErrEmptyParams          = constError("some of the parameters are missing")
+	ErrNoCity               = constError("no city in the database")
 )

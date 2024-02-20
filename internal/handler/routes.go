@@ -5,8 +5,8 @@ import "github.com/gin-gonic/gin"
 func (h *Handler) Routes() *gin.Engine {
 	r := gin.New()
 
-	//r.GET("/weather")
-	r.PUT("/weather", h.PutData)
+	r.GET("/weather", h.getCity)
+	r.PUT("/weather", h.putData)
 
 	return r
 }
