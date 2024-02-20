@@ -1,3 +1,5 @@
+# DONT FORGET TO CHANGE FORMAT TO .env
+
 # service host and port
 HOST=localhost
 PORT=8181
