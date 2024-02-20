@@ -4,9 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+	"weather/logger"
 )
 
-func StartServer(host, port string, r *gin.Engine) error {
+func StartServer(host, port string, r *gin.Engine, appLogger logger.Logger) error {
 	srv := http.Server{
 		Addr:         host + ":" + port,
 		Handler:      r,
@@ -14,7 +15,10 @@ func StartServer(host, port string, r *gin.Engine) error {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	err := srv.ListenAndServe()
+	appLogger.InfoLog.Print("Server has been started")
+	if err := srv.ListenAndServe(); err != nil {
+		appLogger.ErrLog.Print(err)
+	}
 
-	return err
+	return nil
 }

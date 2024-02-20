@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Host       string
 	Port       string
+	WorkerTime string
 	MongoDB    MongoDB
 	DB         DB
 	WeatherApi WeatherApi
@@ -43,8 +44,9 @@ func LoadConfig(path string) (Config, error) {
 	)
 
 	cfg := Config{
-		Host: os.Getenv("HOST"),
-		Port: os.Getenv("PORT"),
+		Host:       os.Getenv("HOST"),
+		Port:       os.Getenv("PORT"),
+		WorkerTime: os.Getenv("WORKER_TIME"),
 		MongoDB: MongoDB{
 			User:     os.Getenv("MONGO_USER"),
 			Password: os.Getenv("MONGO_PSW"),

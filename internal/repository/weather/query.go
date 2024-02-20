@@ -25,6 +25,31 @@ func (w *WeatherRepo) GetCityByName(cityName string) (model.City, error) {
 	return city, nil
 }
 
+func (w *WeatherRepo) GetAllCities() ([]string, error) {
+	query := "SELECT city FROM weather"
+
+	rows, err := w.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	res := []string{}
+	for rows.Next() {
+		var s string
+		if err := rows.Scan(&s); err != nil {
+			continue
+		}
+		res = append(res, s)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 // UPDATE
 func (w *WeatherRepo) UpdateCityByModel(city model.City) error {
 	query := `UPDATE weather SET temp = $2, tempFahrenheit = $3, tempKelvin = $4, main = $5, description = $6, last_updated = $7 WHERE city = $1`

@@ -7,7 +7,8 @@ func (err constError) Error() string {
 }
 
 const (
-	ErrNoInternetConnection = constError("service dont have internet connection")
-	ErrEmptyParams          = constError("some of the parameters are missing")
-	ErrNoCity               = constError("no city in the database")
+	ErrNoInternetConnection          = constError("service dont have internet connection")
+	ErrEmptyParams                   = constError("some of the parameters are missing")
+	ErrNoCity                        = constError("no city in the database")
+	ErrToManyRequestToAnotherService = constError("too many request was sent to another service")
 )

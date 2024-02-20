@@ -12,6 +12,7 @@ type WeatherRepo struct {
 type IWeatherRepo interface {
 	CreateNewData(city model.City) error
 	GetCityByName(cityName string) (model.City, error)
+	GetAllCities() ([]string, error)
 	UpdateCityByModel(city model.City) error
 	DeleteCityByCityName(cityName string) error
 }

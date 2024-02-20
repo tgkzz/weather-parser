@@ -34,6 +34,9 @@ func (w WeatherService) InsertData(cityName string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		if resp.StatusCode == http.StatusTooManyRequests {
+			return model.ErrToManyRequestToAnotherService
+		}
 		return model.ErrNoCity
 	}
 
@@ -55,12 +58,21 @@ func (w WeatherService) InsertData(cityName string) error {
 	// send info to repo layer
 	_, err = w.repo.GetCityByName(city.CityName)
 	if errors.Is(err, sql.ErrNoRows) {
-		return w.repo.CreateNewData(city)
+		if err := w.repo.CreateNewData(city); err != nil {
+			return err
+		}
+		w.logger.InfoLog.Print(model.SuccessPutOperation)
+		return nil
 	} else if err != nil {
 		return err
 	}
 
-	return w.repo.UpdateCityByModel(city)
+	if err := w.repo.UpdateCityByModel(city); err != nil {
+		return err
+	}
+
+	w.logger.InfoLog.Print(model.SuccessPutOperation)
+	return nil
 }
 
 func (w WeatherService) GetCityData(cityName string) (model.City, error) {
@@ -73,4 +85,17 @@ func (w WeatherService) GetCityData(cityName string) (model.City, error) {
 	}
 
 	return result, nil
+}
+
+func (w WeatherService) GetAllCities() ([]string, error) {
+	res, err := w.repo.GetAllCities()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return []string{}, model.ErrNoCity
+		}
+		return nil, err
+	}
+
+	w.logger.InfoLog.Print(model.SuccessGetOperation)
+	return res, nil
 }
